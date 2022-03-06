@@ -1,0 +1,10 @@
+{
+  "namespace": "com.gumi.cursos.kstream.randomdata.person.avro",
+  "type": "record",
+  "name": "PersonDTO",
+  "fields": [
+    { "name": "dni", "type": "DniDTO" },
+    { "name": "name","type": "NameDTO" },
+    { "name": "age", "type": "int" }
+  ]
+}
