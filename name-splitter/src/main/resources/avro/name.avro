@@ -1,0 +1,15 @@
+{
+  "name": "NameDTO",
+  "type": "record",
+  "namespace": "com.gumi.cursos.kstream.randomdata.person.avro",
+  "fields": [
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "isCompuesto",
+      "type": "boolean"
+    }
+  ]
+}
