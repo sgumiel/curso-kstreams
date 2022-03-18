@@ -4,5 +4,9 @@ import com.gumi.cursos.kstream.randomdata.person.domain.Person;
 
 public interface PersonService {
 
-    Person createRandomAndPublish();
+    Person createRandom();
+
+    Long publishRandom();
+
+    Boolean publish(Long personId);
 }
