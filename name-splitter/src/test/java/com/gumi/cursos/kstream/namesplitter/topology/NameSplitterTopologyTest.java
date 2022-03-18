@@ -1,67 +1,53 @@
 package com.gumi.cursos.kstream.namesplitter.topology;
 
-import com.gumi.cursos.kstream.randomdata.person.avro.NameDTO;
-import com.gumi.cursos.kstream.randomdata.person.avro.PersonDTO;
-import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient;
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
-import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.*;
-import org.apache.kafka.streams.kstream.KStream;
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.gumi.cursos.kstream.namesplitter.common.persona.PersonDtoDummyFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Properties;
-
-@ExtendWith(SpringExtension.class)
-public class NameSplitterTopologyTest {
-
-
+@ExtendWith(MockitoExtension.class)
+public class NameSplitterTopologyTest extends NameSplitterBaseTest {
 
     @Test
-    @DisplayName("Given a person with a composed name, this person will be sent to person-topic-compuesto")
-    void given1(){
+    @DisplayName("Test person with composed name should be sent to person-topic-compuesto")
+    void testPersonWithComposedNameShouldBeSentToPersonTopicCompuesto() throws Exception {
 
-        final MockSchemaRegistryClient schemaRegistryClient = new MockSchemaRegistryClient();
+        final var personDTO = PersonDtoDummyFactory.createNameCompuestoDummy();
+        final String dni = new StringBuilder()
+                .append(personDTO.getDni().getNumber())
+                .append(personDTO.getDni().getCharacter()).toString();
 
-        // Mock needs to be passed to application!
+        personTopic.pipeInput(dni, personDTO);
 
-        StreamsBuilder streamsBuilder = new StreamsBuilder();
-        final var nameSplitterTopology = new NameSplitterTopology();
-        final KStream<String, PersonDTO> kstreamPersonDTO = nameSplitterTopology.nameSplitterTopoly(streamsBuilder);
-        Topology topology = streamsBuilder.build();
+        assertThat(personTopicCompuesto.readKeyValuesToMap())
+                .containsKey(dni)
+                .containsValue(personDTO);
 
-        final var serdeKey = Serdes.String();
-        final var serdeValue = new SpecificAvroSerde<PersonDTO>();
+        assertThat(personTopicCompuesto.isEmpty()).isTrue();
+        assertThat(personTopicSimple.isEmpty()).isTrue();
 
-        Properties props = new Properties();
-        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
+    }
 
-        try (TopologyTestDriver topologyTestDriver = new TopologyTestDriver(topology, props)) {
-            TestInputTopic<String, PersonDTO> personTopic = topologyTestDriver
-                    .createInputTopic("person-topic", serdeKey.serializer(), serdeValue.serializer());
+    @Test
+    @DisplayName("Test person with simple name should be sent to person-topic-simple")
+    void testPersonWithSimpleNameShouldBeSentToPersonTopicSimple() throws Exception {
 
-            TestOutputTopic<String, PersonDTO> personTopicCompuesto = topologyTestDriver
-                    .createOutputTopic("person-topic-compuesto", serdeKey.deserializer(), serdeValue.deserializer());
-            TestOutputTopic<String, PersonDTO> personTopicSimple = topologyTestDriver
-                    .createOutputTopic("person-topic-simple", serdeKey.deserializer(), serdeValue.deserializer());
+        final var personDTO = PersonDtoDummyFactory.createNameSimpleDummy();
+        final String dni = new StringBuilder()
+                .append(personDTO.getDni().getNumber())
+                .append(personDTO.getDni().getCharacter()).toString();
 
-            final var personDTO = PersonDTO.newBuilder()
-                    .setName(NameDTO.newBuilder()
-                            .setName("Juan Alberto")
-                            .setIsCompuesto(true).build())
-                    .build();
+        personTopic.pipeInput(dni, personDTO);
 
-            personTopic.pipeInput("52889764V", personDTO);
+        assertThat(personTopicSimple.readKeyValuesToMap())
+                .containsKey(dni)
+                .containsValue(personDTO);
 
-            Assertions.assertThat(personTopicCompuesto.readKeyValuesToMap())
-                    .containsKey("52889764V")
-                    .containsValue(personDTO);
+        assertThat(personTopicCompuesto.isEmpty()).isTrue();
+        assertThat(personTopicSimple.isEmpty()).isTrue();
 
-            Assertions.assertThat(personTopicSimple.isEmpty()).isTrue();
-        }
     }
 }

@@ -1,5 +1,15 @@
 package com.gumi.cursos.kstream.namesplitter.topology;
 
+import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.PERSON_TOPIC_BRANCH_COMPUESTO;
+import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.PERSON_TOPIC_BRANCH_SIMPLE;
+import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.PERSON_TOPIC_CONSUMED_AS;
+import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.PERSON_TOPIC_KSTREAM_COMPUESTO;
+import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.PERSON_TOPIC_KSTREAM_SIMPLE;
+import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.PERSON_TOPIC_SPLIT_AS;
+import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.TOPIC_IN_PERSON_TOPIC;
+import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.TOPIC_OUT_PERSON_COMPUESTO_TOPIC;
+import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.TOPIC_OUT_PERSON_SIMPLE_TOPIC;
+
 import com.gumi.cursos.kstream.randomdata.person.avro.PersonDTO;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Branched;
@@ -15,21 +25,21 @@ public class NameSplitterTopology {
     @Bean
     public KStream<String, PersonDTO> nameSplitterTopoly(StreamsBuilder streamsBuilder){
 
-        KStream<String, PersonDTO> personDTOKStream = streamsBuilder
-                .stream("person-topic", Consumed.as("name-sppliter"));
+        KStream<String, PersonDTO> personTopicKstream = streamsBuilder
+                .stream(TOPIC_IN_PERSON_TOPIC, Consumed.as(PERSON_TOPIC_CONSUMED_AS));
 
-        final var personNameSplitterBranches = personDTOKStream
-                .split(Named.as("kstream-person-"))
-                .branch( (key, value) -> value.getName().getIsCompuesto(), Branched.as("compuesto"))
-                .defaultBranch(Branched.as("simple"));
+        final var personNameSplitterBranches = personTopicKstream
+                .split(Named.as(PERSON_TOPIC_SPLIT_AS))
+                .branch( (key, value) -> value.getName().getIsCompuesto(), Branched.as(PERSON_TOPIC_BRANCH_COMPUESTO))
+                .defaultBranch(Branched.as(PERSON_TOPIC_BRANCH_SIMPLE));
 
-        final var kstreamNameCompuesto = personNameSplitterBranches.get("kstream-person-compuesto");
-        kstreamNameCompuesto.to("person-topic-compuesto");
+        final var kstreamNameCompuesto = personNameSplitterBranches.get(PERSON_TOPIC_KSTREAM_COMPUESTO);
+        kstreamNameCompuesto.to(TOPIC_OUT_PERSON_COMPUESTO_TOPIC);
 
-        final var kstreamNameSimple = personNameSplitterBranches.get("kstream-person-simple");
-        kstreamNameSimple.to("person-topic-simple");
+        final var kstreamNameSimple = personNameSplitterBranches.get(PERSON_TOPIC_KSTREAM_SIMPLE);
+        kstreamNameSimple.to(TOPIC_OUT_PERSON_SIMPLE_TOPIC);
 
-        return personDTOKStream;
+        return personTopicKstream;
     }
 }
 
