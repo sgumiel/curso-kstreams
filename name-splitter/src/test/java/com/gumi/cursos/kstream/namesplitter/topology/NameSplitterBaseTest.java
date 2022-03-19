@@ -31,7 +31,7 @@ public class NameSplitterBaseTest extends BaseTopologyTest {
 
 		// Create topology to handle stream of users
 		StreamsBuilder builder = new StreamsBuilder();
-		new NameSplitterTopology().nameSplitterTopoly(builder);
+		new com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopology().kstreamNameSplitter(builder);
 		Topology topology = builder.build();
 
 		// Create Serdes used for test record keys and values

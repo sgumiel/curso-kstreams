@@ -1,4 +1,4 @@
-package com.gumi.cursos.kstream.namesplitter.topology;
+package com.gumi.cursos.kstream.namesplitter.topology.namesplitter;
 
 public abstract class NameSplitterTopologyConstant {
 

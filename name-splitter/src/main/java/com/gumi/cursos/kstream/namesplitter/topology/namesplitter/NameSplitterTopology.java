@@ -1,4 +1,4 @@
-package com.gumi.cursos.kstream.namesplitter.topology;
+package com.gumi.cursos.kstream.namesplitter.topology.namesplitter;
 
 import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.PERSON_TOPIC_BRANCH_COMPUESTO;
 import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.PERSON_TOPIC_BRANCH_SIMPLE;
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 public class NameSplitterTopology {
 
     @Bean
-    public KStream<String, PersonDTO> nameSplitterTopoly(StreamsBuilder streamsBuilder){
+    public KStream<String, PersonDTO> kstreamNameSplitter(StreamsBuilder streamsBuilder){
 
         KStream<String, PersonDTO> personTopicKstream = streamsBuilder
                 .stream(TOPIC_IN_PERSON_TOPIC, Consumed.as(PERSON_TOPIC_CONSUMED_AS));
