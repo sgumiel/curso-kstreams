@@ -1,11 +1,12 @@
 package com.gumi.cursos.kstream.namesplitter.topology;
 
-import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.TOPIC_IN_PERSON_TOPIC;
-import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.TOPIC_OUT_PERSON_COMPUESTO_TOPIC;
-import static com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopologyConstant.TOPIC_OUT_PERSON_SIMPLE_TOPIC;
+import static com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopologyConstant.TOPIC_IN_PERSON_TOPIC;
+import static com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopologyConstant.TOPIC_OUT_PERSON_COMPUESTO_TOPIC;
+import static com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopologyConstant.TOPIC_OUT_PERSON_SIMPLE_TOPIC;
 
 import java.util.Map;
 
+import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopology;
 import com.gumi.cursos.kstream.randomdata.person.avro.PersonDTO;
 import io.confluent.kafka.schemaregistry.testutil.MockSchemaRegistry;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
@@ -31,7 +32,7 @@ public class NameSplitterBaseTest extends BaseTopologyTest {
 
 		// Create topology to handle stream of users
 		StreamsBuilder builder = new StreamsBuilder();
-		new com.gumi.cursos.kstream.namesplitter.topology.NameSplitterTopology().kstreamNameSplitter(builder);
+		new NameSplitterTopology().kstreamNameSplitter(builder);
 		Topology topology = builder.build();
 
 		// Create Serdes used for test record keys and values
