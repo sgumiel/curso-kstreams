@@ -1,7 +1,7 @@
 {
   "name": "DniDTO",
   "type": "record",
-  "namespace": "com.gumi.cursos.kstream.namesplitter.model.infrastructure.avro",
+  "namespace": "com.gumi.cursos.kstream.infrastructure.kafka.avro",
   "fields": [
     {
       "name": "number",

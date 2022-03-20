@@ -1,8 +1,8 @@
 package com.gumi.cursos.kstream.namesplitter.topology.namesplitter;
 
+import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaTopicProperties;
-import com.gumi.cursos.kstream.namesplitter.model.infrastructure.avro.PersonDTO;
-import com.gumi.cursos.kstream.namesplitter.model.mapper.PersonMapper;
+import com.gumi.cursos.kstream.namesplitter.model.mapper.PersonAvroMapper;
 import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.filter.PersonWithNameComposed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class NameSplitterTopologyDefinition {
 
     private final KafkaTopicProperties kafkaTopicProperties;
     private final PersonWithNameComposed personWithNameComposed;
-    private final PersonMapper personMapper;
+    private final PersonAvroMapper personMapper;
 
     @Bean
     public Topology nameSplitterTopology(StreamsBuilder streamsBuilder){

@@ -1,5 +1,5 @@
 {
-  "namespace": "com.gumi.cursos.kstream.namesplitter.model.infrastructure.avro",
+  "namespace": "com.gumi.cursos.kstream.infrastructure.kafka.avro",
   "type": "record",
   "name": "PersonDTO",
   "fields": [

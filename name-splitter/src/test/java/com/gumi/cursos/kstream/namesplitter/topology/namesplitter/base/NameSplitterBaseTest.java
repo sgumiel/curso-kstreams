@@ -2,9 +2,9 @@ package com.gumi.cursos.kstream.namesplitter.topology.namesplitter.base;
 
 import java.util.Map;
 
+import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaTopicProperties;
-import com.gumi.cursos.kstream.namesplitter.model.infrastructure.avro.PersonDTO;
-import com.gumi.cursos.kstream.namesplitter.model.mapper.PersonMapper;
+import com.gumi.cursos.kstream.namesplitter.model.mapper.PersonAvroMapper;
 import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyTest;
 import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopologyDefinition;
 import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.config.NameSplitterTopologyTestConfig;
@@ -47,7 +47,7 @@ public class NameSplitterBaseTest extends BaseTopologyTest {
 	protected PersonWithNameComposed personWithNameComposed;
 
 	@MockBean
-	protected PersonMapper personMapper;
+	protected PersonAvroMapper personMapper;
 
 	@BeforeEach
 	public void beforeachNameSplitter() {

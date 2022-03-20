@@ -1,9 +1,9 @@
 package com.gumi.cursos.kstream.namesplitter.common.persona;
 
+import com.gumi.cursos.kstream.infrastructure.kafka.avro.DniDTO;
+import com.gumi.cursos.kstream.infrastructure.kafka.avro.NameDTO;
+import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import com.gumi.cursos.kstream.namesplitter.model.domain.Person;
-import com.gumi.cursos.kstream.namesplitter.model.infrastructure.avro.DniDTO;
-import com.gumi.cursos.kstream.namesplitter.model.infrastructure.avro.NameDTO;
-import com.gumi.cursos.kstream.namesplitter.model.infrastructure.avro.PersonDTO;
 
 public abstract class PersonDtoDummyFactory {
 
