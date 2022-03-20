@@ -1,4 +1,4 @@
-package com.gumi.cursos.kstream.namesplitter.topology.namesplitter.base;
+package com.gumi.cursos.kstream.namesplitter.topology.namemerger.base;
 
 import java.util.Map;
 
@@ -7,8 +7,7 @@ import com.gumi.cursos.kstream.namesplitter.config.KafkaTopicProperties;
 import com.gumi.cursos.kstream.namesplitter.model.mapper.PersonAvroMapper;
 import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyConfig;
 import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyTest;
-import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopologyDefinition;
-import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.filter.PersonWithNameComposed;
+import com.gumi.cursos.kstream.namesplitter.topology.namemerger.NameMergerTopologyDefinition;
 import io.confluent.kafka.schemaregistry.testutil.MockSchemaRegistry;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
@@ -29,28 +28,25 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @EnableAutoConfiguration
-@Import({KafkaTopicProperties.class, BaseTopologyConfig.class })
-@SpringBootTest(classes = NameSplitterTopologyDefinition.class)
-public class NameSplitterBaseTest extends BaseTopologyTest {
+@Import({ KafkaTopicProperties.class, BaseTopologyConfig.class })
+@SpringBootTest(classes = NameMergerTopologyDefinition.class)
+public class NameMergerBaseTest extends BaseTopologyTest {
 
-	protected TestInputTopic<String, PersonDTO> personTopic;
-	protected TestOutputTopic<String, PersonDTO> personComposedTopic;
-	protected TestOutputTopic<String, PersonDTO> personSimpleTopic;
+	protected TestInputTopic<String, PersonDTO> personComposedTopic;
+	protected TestInputTopic<String, PersonDTO> personSimpleTopic;
+	protected TestOutputTopic<String, PersonDTO> personLoginTopic;
 
 	@Autowired
-	protected Topology nameSplitterTopology;
+	protected Topology nameMergerTopology;
 
 	@Autowired
 	protected KafkaTopicProperties kafkaTopicProperties;
 
 	@MockBean
-	protected PersonWithNameComposed personWithNameComposed;
-
-	@MockBean
 	protected PersonAvroMapper personMapper;
 
 	@BeforeEach
-	public void beforeachNameSplitter() {
+	public void beforEachNameMerger() {
 
 		// Create Serdes used for test record keys and values
 		Serde<String> stringSerde = Serdes.String();
@@ -62,19 +58,19 @@ public class NameSplitterBaseTest extends BaseTopologyTest {
 		avroPersonDTOSerde.configure(config, false);
 
 		// Create test driver
-		testDriver = new TopologyTestDriver(nameSplitterTopology, propsStreamConfig);
+		testDriver = new TopologyTestDriver(nameMergerTopology, propsStreamConfig);
 
 		// Define input and output topics to use in tests
-		personTopic = testDriver.createInputTopic(
-				this.kafkaTopicProperties.getPerson(),
+		personComposedTopic = testDriver.createInputTopic(
+				this.kafkaTopicProperties.getNameComposed(),
 				stringSerde.serializer(),
 				avroPersonDTOSerde.serializer());
-		personComposedTopic = testDriver.createOutputTopic(
-				this.kafkaTopicProperties.getNameComposed(),
-				stringSerde.deserializer(),
-				avroPersonDTOSerde.deserializer());
-		personSimpleTopic = testDriver.createOutputTopic(
+		personSimpleTopic = testDriver.createInputTopic(
 				this.kafkaTopicProperties.getNameSimple(),
+				stringSerde.serializer(),
+				avroPersonDTOSerde.serializer());
+		personLoginTopic = testDriver.createOutputTopic(
+				this.kafkaTopicProperties.getLogin(),
 				stringSerde.deserializer(),
 				avroPersonDTOSerde.deserializer());
 	}
