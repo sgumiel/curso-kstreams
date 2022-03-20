@@ -1,0 +1,8 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+topics:
+  person: test-person-topic
+  name-composed: test-name-composed-topic
+  name-simple: test-name-simple-topic
+  login: test-login-topic

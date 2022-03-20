@@ -1,4 +1,4 @@
-package com.gumi.cursos.kstream.namesplitter.topology;
+package com.gumi.cursos.kstream.namesplitter.topology.common;
 
 import java.util.Properties;
 
@@ -17,7 +17,7 @@ public class BaseTopologyTest {
 	protected Properties propsStreamConfig;
 
 
-	public BaseTopologyTest () {
+	public BaseTopologyTest() {
 
 		this.propsStreamConfig = new Properties();
 

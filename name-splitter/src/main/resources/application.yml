@@ -9,6 +9,7 @@ schema:
     url: http://localhost:8081
 
 topics:
+  person: person-topic
   name-composed: name-composed-topic
   name-simple: name-simple-topic
   login: login-topic
@@ -16,4 +17,4 @@ topics:
 logging:
   level:
     com.gumi.cursos.kstream.namesplitter: DEBUG
-    root: DEBUG
+    root: INFO
