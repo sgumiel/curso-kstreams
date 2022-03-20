@@ -1,9 +1,5 @@
 package com.gumi.cursos.kstream.namesplitter.topology;
 
-import static com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopologyConstant.TOPIC_IN_PERSON_TOPIC;
-import static com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopologyConstant.TOPIC_OUT_PERSON_COMPUESTO_TOPIC;
-import static com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopologyConstant.TOPIC_OUT_PERSON_SIMPLE_TOPIC;
-
 import java.util.Map;
 
 import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopology;
@@ -32,7 +28,7 @@ public class NameSplitterBaseTest extends BaseTopologyTest {
 
 		// Create topology to handle stream of users
 		StreamsBuilder builder = new StreamsBuilder();
-		new NameSplitterTopology().kstreamNameSplitter(builder);
+		new NameSplitterTopology().kStreamNameSplitter(builder);
 		Topology topology = builder.build();
 
 		// Create Serdes used for test record keys and values
@@ -49,15 +45,15 @@ public class NameSplitterBaseTest extends BaseTopologyTest {
 
 		// Define input and output topics to use in tests
 		personTopic = testDriver.createInputTopic(
-				TOPIC_IN_PERSON_TOPIC,
+				"person-topic",
 				stringSerde.serializer(),
 				avroPersonDTOSerde.serializer());
 		personTopicCompuesto = testDriver.createOutputTopic(
-				TOPIC_OUT_PERSON_COMPUESTO_TOPIC,
+				"person-composed-topic",
 				stringSerde.deserializer(),
 				avroPersonDTOSerde.deserializer());
 		personTopicSimple = testDriver.createOutputTopic(
-				TOPIC_OUT_PERSON_SIMPLE_TOPIC,
+				"person-simple-topic",
 				stringSerde.deserializer(),
 				avroPersonDTOSerde.deserializer());
 	}
