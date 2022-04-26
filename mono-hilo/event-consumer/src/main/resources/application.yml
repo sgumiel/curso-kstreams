@@ -1,0 +1,13 @@
+server:
+  port: 9090
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+kafka:
+  consumer:
+    groupId: events-consumer
+
+topics:
+  event: events-topic
