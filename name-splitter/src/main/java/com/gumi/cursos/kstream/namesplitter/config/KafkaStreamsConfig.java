@@ -1,23 +1,21 @@
 package com.gumi.cursos.kstream.namesplitter.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
+import lombok.Getter;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
 
-import java.util.HashMap;
-import java.util.Map;
-
+@Getter
 @Configuration
-@EnableKafka
-@EnableKafkaStreams
 public class KafkaStreamsConfig {
 
     @Value(value = "${spring.kafka.bootstrap-servers}")

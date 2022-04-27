@@ -37,4 +37,12 @@ public class KafkaTopicsConfig {
 				.replicas(1)
 				.build();
 	}
+
+	@Bean
+	public NewTopic personTopic(){
+		return TopicBuilder.name(this.kafkaTopicProperties.getPerson())
+				.partitions(1)
+				.replicas(1)
+				.build();
+	}
 }

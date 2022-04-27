@@ -1,6 +1,13 @@
 spring:
+  application:
+    name: name-splitter
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:9093
+
+schema:
+  registry:
+    url: mock://test
+
 topics:
   person: test-person-topic
   name-composed: test-name-composed-topic

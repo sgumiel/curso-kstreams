@@ -13,7 +13,7 @@ public class NameMergerTopologyITest extends NameMergerBaseTest {
 
 	@Test
 	@DisplayName("Test person from name composed topic should should be sent to login topic")
-	void testPersonFromNameComposedShouldBeSentToLoginTopic() throws Exception {
+	void testPersonFromNameComposedShouldBeSentToLoginTopic() {
 
 		final var personDTO = PersonDtoDummyFactory.createPersonWithNameComposedDummy();
 		final var person = PersonDummyFactory.createPersonFrom(personDTO);
@@ -39,7 +39,7 @@ public class NameMergerTopologyITest extends NameMergerBaseTest {
 
 	@Test
 	@DisplayName("Test person from name simple topic should should be sent to login topic")
-	void testPersonFromNameSimpleShouldBeSentToLoginTopic() throws Exception {
+	void testPersonFromNameSimpleShouldBeSentToLoginTopic() {
 
 		final var personDTO = PersonDtoDummyFactory.createPersonWithNameComposedDummy();
 		final var person = PersonDummyFactory.createPersonFrom(personDTO);

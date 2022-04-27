@@ -50,7 +50,7 @@ public class NameSplitterBaseTest extends BaseTopologyTest {
 	protected PersonAvroMapper personMapper;
 
 	@BeforeEach
-	public void beforeachNameSplitter() {
+	public void beforeEachNameSplitter() {
 
 		// Create Serdes used for test record keys and values
 		Serde<String> stringSerde = Serdes.String();

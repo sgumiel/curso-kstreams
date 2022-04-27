@@ -1,20 +1,21 @@
-package com.gumi.cursos.kstream.namesplitter.topology.namemerger.base;
+package com.gumi.cursos.kstream.namesplitter.topology.login.base;
 
 import java.util.Map;
 
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
+import com.gumi.cursos.kstream.namesplitter.config.KafkaStreamsConfig;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaTopicProperties;
-import com.gumi.cursos.kstream.namesplitter.model.mapper.PersonAvroMapper;
 import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyConfig;
 import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyTest;
-import com.gumi.cursos.kstream.namesplitter.topology.namemerger.NameMergerTopologyDefinition;
+import com.gumi.cursos.kstream.namesplitter.topology.login.LoginTopologyDefinition;
+import com.gumi.cursos.kstream.namesplitter.topology.login.statestore.login.transformer.PersonLoggedCheckerTransformer;
+import com.gumi.cursos.kstream.namesplitter.topology.login.statestore.login.transformer.PersonLoginSaveTransformer;
 import io.confluent.kafka.schemaregistry.testutil.MockSchemaRegistry;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.TestInputTopic;
-import org.apache.kafka.streams.TestOutputTopic;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.TopologyTestDriver;
 import org.junit.jupiter.api.AfterEach;
@@ -22,31 +23,29 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @EnableAutoConfiguration
 @Import({ KafkaTopicProperties.class, BaseTopologyConfig.class })
-@SpringBootTest(classes = NameMergerTopologyDefinition.class)
-public class NameMergerBaseTest extends BaseTopologyTest {
+@SpringBootTest(classes = { LoginTopologyDefinition.class, KafkaStreamsConfig.class,
+		PersonLoginSaveTransformer.class, PersonLoggedCheckerTransformer.class })
+public class LoginBaseTest extends BaseTopologyTest {
 
-	protected TestInputTopic<String, PersonDTO> personComposedTopic;
-	protected TestInputTopic<String, PersonDTO> personSimpleTopic;
-	protected TestOutputTopic<String, PersonDTO> personLoginTopic;
+	protected TestInputTopic<String, PersonDTO> personLoginTopic;
 
 	@Autowired
-	protected Topology nameMergerTopology;
+	protected Topology loginTopology;
 
 	@Autowired
 	protected KafkaTopicProperties kafkaTopicProperties;
 
-	@MockBean
-	protected PersonAvroMapper personMapper;
+	@Autowired
+	protected KafkaStreamsConfig kafkaStreamsConfig;
 
 	@BeforeEach
-	public void beforeEachNameMerger() {
+	public void beforeEachLoginTopology() {
 
 		// Create Serdes used for test record keys and values
 		Serde<String> stringSerde = Serdes.String();
@@ -58,21 +57,13 @@ public class NameMergerBaseTest extends BaseTopologyTest {
 		avroPersonDTOSerde.configure(config, false);
 
 		// Create test driver
-		testDriver = new TopologyTestDriver(nameMergerTopology, propsStreamConfig);
+		testDriver = new TopologyTestDriver(loginTopology, propsStreamConfig);
 
 		// Define input and output topics to use in tests
-		personComposedTopic = testDriver.createInputTopic(
-				this.kafkaTopicProperties.getNameComposed(),
-				stringSerde.serializer(),
-				avroPersonDTOSerde.serializer());
-		personSimpleTopic = testDriver.createInputTopic(
-				this.kafkaTopicProperties.getNameSimple(),
-				stringSerde.serializer(),
-				avroPersonDTOSerde.serializer());
-		personLoginTopic = testDriver.createOutputTopic(
+		personLoginTopic = testDriver.createInputTopic(
 				this.kafkaTopicProperties.getLogin(),
-				stringSerde.deserializer(),
-				avroPersonDTOSerde.deserializer());
+				stringSerde.serializer(),
+				avroPersonDTOSerde.serializer());
 	}
 
 	@AfterEach
