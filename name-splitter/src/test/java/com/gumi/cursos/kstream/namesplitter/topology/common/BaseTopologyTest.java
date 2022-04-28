@@ -7,7 +7,13 @@ import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.TopologyTestDriver;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
+@EnableAutoConfiguration
+@Import(TopologyTestConfig.class)
 public class BaseTopologyTest {
 
 	protected static final String SCHEMA_REGISTRY_SCOPE = BaseTopologyTest.class.getName();

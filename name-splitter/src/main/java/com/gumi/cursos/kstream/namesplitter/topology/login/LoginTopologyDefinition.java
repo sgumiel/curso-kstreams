@@ -9,26 +9,18 @@ import static com.gumi.cursos.kstream.namesplitter.topology.login.constant.Login
 import static com.gumi.cursos.kstream.namesplitter.topology.login.constant.LoginTopologyConstant.SPLIT_NAMED_AS;
 import static com.gumi.cursos.kstream.namesplitter.topology.login.subtopology.PersonAlreadyLoggedSubTopologyDefinition.personAlreadyLoggedBranch;
 import static com.gumi.cursos.kstream.namesplitter.topology.login.subtopology.PersonNotLoggedSubTopologyDefinition.personNotLoggedBranch;
-import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
-import com.gumi.cursos.kstream.namesplitter.config.KafkaStreamsConfig;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaTopicProperties;
-import com.gumi.cursos.kstream.namesplitter.topology.login.statestore.login.transformer.PersonLoggedCheckerTransformer;
-import com.gumi.cursos.kstream.namesplitter.topology.login.statestore.login.transformer.PersonLoginSaveTransformer;
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
+import com.gumi.cursos.kstream.namesplitter.transformer.PersonLoggedCheckerTransformer;
+import com.gumi.cursos.kstream.namesplitter.transformer.PersonLoginSaveTransformer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.Branched;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Named;
-import org.apache.kafka.streams.state.Stores;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -40,19 +32,6 @@ public class LoginTopologyDefinition {
 	@Bean
 	public Topology loginTopology(StreamsBuilder streamsBuilder,
 			final KafkaTopicProperties kafkaTopicProperties,
-			final KafkaStreamsConfig kafkaStreamsConfig,
-			final PersonLoginSaveTransformer personLoginSaveTransformer,
-			final PersonLoggedCheckerTransformer personLoggedCheckerTransformer) {
-
-		defineStateStore(streamsBuilder, kafkaStreamsConfig);
-		defineTopology(streamsBuilder, kafkaTopicProperties, personLoginSaveTransformer, personLoggedCheckerTransformer);
-
-		return streamsBuilder.build();
-
-	}
-
-	private void defineTopology(final StreamsBuilder streamsBuilder,
-			final KafkaTopicProperties kafkaTopicProperties,
 			final PersonLoginSaveTransformer personLoginSaveTransformer,
 			final PersonLoggedCheckerTransformer personLoggedCheckerTransformer) {
 
@@ -61,29 +40,18 @@ public class LoginTopologyDefinition {
 
 		final var branches = loginKStream
 				.peek((key, person) -> log.debug("[key: {}], [person: {}]", key, person))
-				.transform(() -> personLoggedCheckerTransformer, PERSON_LOGIN_STORE)
+				.transform(() -> personLoggedCheckerTransformer, Named.as("personLoggedCheckerTransformer"), PERSON_LOGIN_STORE)
+				.peek((key, personLoggedCheckerResult) -> log.debug("[key: {}], [personLoggedCheckerResult: {}]", key, personLoggedCheckerResult.toString()))
 				.split(Named.as(SPLIT_NAMED_AS))
-                .branch((key, person) -> person.isLogged(), Branched.as(BRANCHED_AS_ALREADY_LOGGED))
-                .defaultBranch(Branched.as(BRANCHED_AS_NOT_LOGGED));
+				.branch((key, person) -> person.isLogged(), Branched.as(BRANCHED_AS_ALREADY_LOGGED))
+				.defaultBranch(Branched.as(BRANCHED_AS_NOT_LOGGED));
 
-        final var personLoggedBranch = branches.get(BRANCH_ALREADY_LOGGED);
-        final var personNotLoggedBranch = branches.get(BRANCH_NOT_LOGGED);
+		final var personLoggedBranch = branches.get(BRANCH_ALREADY_LOGGED);
+		final var personNotLoggedBranch = branches.get(BRANCH_NOT_LOGGED);
 
-        personAlreadyLoggedBranch(personLoggedBranch);
-        personNotLoggedBranch(personNotLoggedBranch, personLoginSaveTransformer);
-	}
+		personAlreadyLoggedBranch(personLoggedBranch);
+		personNotLoggedBranch(personNotLoggedBranch, personLoginSaveTransformer);
 
-	private void defineStateStore(final StreamsBuilder streamsBuilder, final KafkaStreamsConfig kafkaStreamsConfig) {
-		final var avroSerde = new SpecificAvroSerde<PersonDTO>();
-		Map<String, String> config = new HashMap<>();
-		config.put(SCHEMA_REGISTRY_URL_CONFIG, kafkaStreamsConfig.getSchemaRegistryUrl());
-		avroSerde.configure(config, false);
-
-		final var personLoginStore = Stores.keyValueStoreBuilder(
-				Stores.persistentKeyValueStore(PERSON_LOGIN_STORE),
-				Serdes.String(),
-				avroSerde);
-
-		streamsBuilder.addStateStore(personLoginStore);
+		return streamsBuilder.build();
 	}
 }

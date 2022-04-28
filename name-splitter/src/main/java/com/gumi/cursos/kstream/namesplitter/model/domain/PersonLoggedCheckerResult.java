@@ -1,9 +1,11 @@
-package com.gumi.cursos.kstream.namesplitter.topology.login.statestore.login.model;
+package com.gumi.cursos.kstream.namesplitter.model.domain;
 
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class PersonLoggedCheckerResult {
 
 	private PersonDTO person;

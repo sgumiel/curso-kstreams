@@ -1,6 +1,6 @@
 package com.gumi.cursos.kstream.namesplitter.topology.login.subtopology;
 
-import com.gumi.cursos.kstream.namesplitter.topology.login.statestore.login.model.PersonLoggedCheckerResult;
+import com.gumi.cursos.kstream.namesplitter.model.domain.PersonLoggedCheckerResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.kstream.KStream;
 

@@ -1,4 +1,4 @@
-package com.gumi.cursos.kstream.namesplitter.topology.login.statestore.login.transformer;
+package com.gumi.cursos.kstream.namesplitter.transformer;
 
 import static com.gumi.cursos.kstream.namesplitter.topology.login.constant.LoginTopologyConstant.PERSON_LOGIN_STORE;
 

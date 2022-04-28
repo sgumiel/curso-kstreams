@@ -5,11 +5,10 @@ import java.util.Map;
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaStreamsConfig;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaTopicProperties;
-import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyConfig;
 import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyTest;
 import com.gumi.cursos.kstream.namesplitter.topology.login.LoginTopologyDefinition;
-import com.gumi.cursos.kstream.namesplitter.topology.login.statestore.login.transformer.PersonLoggedCheckerTransformer;
-import com.gumi.cursos.kstream.namesplitter.topology.login.statestore.login.transformer.PersonLoginSaveTransformer;
+import com.gumi.cursos.kstream.namesplitter.transformer.PersonLoggedCheckerTransformer;
+import com.gumi.cursos.kstream.namesplitter.transformer.PersonLoginSaveTransformer;
 import io.confluent.kafka.schemaregistry.testutil.MockSchemaRegistry;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
@@ -21,16 +20,12 @@ import org.apache.kafka.streams.TopologyTestDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
-@EnableAutoConfiguration
-@Import({ KafkaTopicProperties.class, BaseTopologyConfig.class })
-@SpringBootTest(classes = { LoginTopologyDefinition.class, KafkaStreamsConfig.class,
-		PersonLoginSaveTransformer.class, PersonLoggedCheckerTransformer.class })
+@SpringBootTest(classes = {
+		LoginTopologyDefinition.class,
+		PersonLoginSaveTransformer.class,
+		PersonLoggedCheckerTransformer.class })
 public class LoginBaseTest extends BaseTopologyTest {
 
 	protected TestInputTopic<String, PersonDTO> personLoginTopic;

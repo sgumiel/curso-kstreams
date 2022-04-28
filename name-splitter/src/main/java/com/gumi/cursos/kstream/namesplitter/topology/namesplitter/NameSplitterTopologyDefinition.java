@@ -3,6 +3,7 @@ package com.gumi.cursos.kstream.namesplitter.topology.namesplitter;
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaTopicProperties;
 import com.gumi.cursos.kstream.namesplitter.model.mapper.PersonAvroMapper;
+import com.gumi.cursos.kstream.namesplitter.transformer.PersonLoggedCheckerTransformer;
 import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.filter.PersonWithNameComposed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,33 +19,35 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class NameSplitterTopologyDefinition {
 
-    private final KafkaTopicProperties kafkaTopicProperties;
-    private final PersonWithNameComposed personWithNameComposed;
-    private final PersonAvroMapper personMapper;
+	private final KafkaTopicProperties kafkaTopicProperties;
+	private final PersonWithNameComposed personWithNameComposed;
+	private final PersonAvroMapper personMapper;
 
-    @Bean
-    public Topology nameSplitterTopology(StreamsBuilder streamsBuilder){
+	private final PersonLoggedCheckerTransformer personLoggedCheckerTransformer;
 
-        final var personKStream = streamsBuilder
-                .<String, PersonDTO>stream(this.kafkaTopicProperties.getPerson())
-                .mapValues(personMapper::toDomain);
+	@Bean
+	public Topology nameSplitterTopology(StreamsBuilder streamsBuilder) {
 
-        final var nameBranchMap = personKStream
-                .split(Named.as("person-name-"))
-                .branch(personWithNameComposed, Branched.as("composed"))
-                .defaultBranch(Branched.as("simple"));
+		final var personKStream = streamsBuilder
+				.<String, PersonDTO>stream(this.kafkaTopicProperties.getPerson())
+				.mapValues(personMapper::toDomain);
 
-        final var nameComposedBranch = nameBranchMap.get("person-name-composed");
-        nameComposedBranch
-                .mapValues(this.personMapper::toDTO)
-                .to(this.kafkaTopicProperties.getNameComposed());
+		final var nameBranchMap = personKStream
+				.split(Named.as("person-name-"))
+				.branch(personWithNameComposed, Branched.as("composed"))
+				.defaultBranch(Branched.as("simple"));
 
-        final var nameSimpleBranch = nameBranchMap.get("person-name-simple");
-        nameSimpleBranch
-                .mapValues(this.personMapper::toDTO)
-                .to(this.kafkaTopicProperties.getNameSimple());
+		final var nameComposedBranch = nameBranchMap.get("person-name-composed");
+		nameComposedBranch
+				.mapValues(this.personMapper::toDTO)
+				.to(this.kafkaTopicProperties.getNameComposed());
 
-        return streamsBuilder.build();
+		final var nameSimpleBranch = nameBranchMap.get("person-name-simple");
+		nameSimpleBranch
+				.mapValues(this.personMapper::toDTO)
+				.to(this.kafkaTopicProperties.getNameSimple());
 
-    }
+		return streamsBuilder.build();
+
+	}
 }

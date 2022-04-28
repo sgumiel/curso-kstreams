@@ -15,7 +15,7 @@ public class LoginTopologyITest extends LoginBaseTest {
 
     @Test
     @DisplayName("Test save person in store when does not exists in store")
-    void givenAPersonDTOWhoDoesNotExistsInStoreWhenIspublishedInPersonLoginTopicThenItIsAddedToTheStore() throws Exception {
+    void givenAPersonDTOWhoDoesNotExistsInStoreWhenIsPublishedInPersonLoginTopicThenItIsAddedToTheStore() throws Exception {
 
         final var personDTO = PersonDtoDummyFactory.createPersonWithNameComposedDummy();
         final var person = PersonDummyFactory.createPersonFrom(personDTO);

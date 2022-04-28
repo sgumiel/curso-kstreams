@@ -5,10 +5,10 @@ import java.util.Map;
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaTopicProperties;
 import com.gumi.cursos.kstream.namesplitter.model.mapper.PersonAvroMapper;
-import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyConfig;
 import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyTest;
 import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.NameSplitterTopologyDefinition;
 import com.gumi.cursos.kstream.namesplitter.topology.namesplitter.filter.PersonWithNameComposed;
+import com.gumi.cursos.kstream.namesplitter.transformer.PersonLoggedCheckerTransformer;
 import io.confluent.kafka.schemaregistry.testutil.MockSchemaRegistry;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
@@ -21,16 +21,11 @@ import org.apache.kafka.streams.TopologyTestDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
-@EnableAutoConfiguration
-@Import({KafkaTopicProperties.class, BaseTopologyConfig.class })
-@SpringBootTest(classes = NameSplitterTopologyDefinition.class)
+@SpringBootTest(classes = { NameSplitterTopologyDefinition.class,
+		PersonLoggedCheckerTransformer.class })
 public class NameSplitterBaseTest extends BaseTopologyTest {
 
 	protected TestInputTopic<String, PersonDTO> personTopic;
