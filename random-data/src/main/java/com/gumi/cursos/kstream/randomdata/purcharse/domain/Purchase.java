@@ -1,12 +1,12 @@
 package com.gumi.cursos.kstream.randomdata.purcharse.domain;
 
-import com.gumi.cursos.kstream.randomdata.item.domain.Item;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import com.gumi.cursos.kstream.randomdata.item.domain.Item;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @Data
 @AllArgsConstructor

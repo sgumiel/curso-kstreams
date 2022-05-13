@@ -1,6 +1,5 @@
 package com.gumi.cursos.kstream.namesplitter.model.domain;
 
-import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -8,15 +7,15 @@ import lombok.ToString;
 @ToString
 public class PersonLoggedCheckerResult {
 
-	private PersonDTO person;
+	private Person person;
 	private boolean logged;
 
-	private PersonLoggedCheckerResult(PersonDTO person, boolean logged){
+	private PersonLoggedCheckerResult(Person person, boolean logged){
 		this.person = person;
 		this.logged = logged;
 	}
 
-	public static PersonLoggedCheckerResult of(PersonDTO person, boolean exists){
+	public static PersonLoggedCheckerResult of(Person person, boolean exists){
 		return new PersonLoggedCheckerResult(person, exists);
 	}
 }

@@ -13,5 +13,7 @@ public class KafkaTopicProperties {
 	private String nameComposed;
 	private String nameSimple;
 	private String login;
+	private String personSomeChecksAfterLogin;
+	private String otherStreamBuilder;
 
 }

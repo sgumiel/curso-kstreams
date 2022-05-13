@@ -1,6 +1,6 @@
 package com.gumi.cursos.kstream.namesplitter.topology.login.subtopology;
 
-import static com.gumi.cursos.kstream.namesplitter.topology.login.constant.LoginTopologyConstant.PERSON_LOGIN_STORE;
+import static com.gumi.cursos.kstream.namesplitter.statestore.login.StateStoreLoginFactory.PERSON_LOGIN_STORE;
 
 import com.gumi.cursos.kstream.namesplitter.model.domain.PersonLoggedCheckerResult;
 import com.gumi.cursos.kstream.namesplitter.transformer.PersonLoginSaveTransformer;

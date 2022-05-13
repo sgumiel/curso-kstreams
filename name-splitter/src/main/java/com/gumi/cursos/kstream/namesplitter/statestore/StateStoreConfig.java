@@ -1,7 +1,9 @@
 package com.gumi.cursos.kstream.namesplitter.statestore;
 
+import static com.gumi.cursos.kstream.namesplitter.statestore.countlogins.StateStoreCountLoginsFactory.createPersonCountLoginsStore;
+import static com.gumi.cursos.kstream.namesplitter.statestore.login.StateStoreLoginFactory.createPersonLoginStore;
+
 import com.gumi.cursos.kstream.namesplitter.config.ApplicationProperties;
-import com.gumi.cursos.kstream.namesplitter.statestore.login.StateStoreFactory;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -16,7 +18,10 @@ public class StateStoreConfig {
 
 	@PostConstruct
 	public void addStateStore() {
-		final var personLoggedStore = StateStoreFactory.createStateStoreLogin(this.applicationProperties);
-		this.streamsBuilder.addStateStore(personLoggedStore);
+		final var personLoginStore = createPersonLoginStore(this.applicationProperties);
+		this.streamsBuilder.addStateStore(personLoginStore);
+
+		final var personCountLoginsStore = createPersonCountLoginsStore(this.applicationProperties);
+		this.streamsBuilder.addStateStore(personCountLoginsStore);
 	}
 }

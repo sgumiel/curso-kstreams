@@ -13,6 +13,8 @@ topics:
   name-composed: name-composed-topic
   name-simple: name-simple-topic
   login: login-topic
+  person-some-checks-after-login: person-some-checks-after-login
+  other-stream-builder: other-stream-builder
 
 logging:
   level:

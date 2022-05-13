@@ -5,8 +5,12 @@ import java.util.Map;
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaStreamsConfig;
 import com.gumi.cursos.kstream.namesplitter.config.KafkaTopicProperties;
+import com.gumi.cursos.kstream.namesplitter.model.mapper.DniAvroMapperImpl;
+import com.gumi.cursos.kstream.namesplitter.model.mapper.NameAvroMapperImpl;
+import com.gumi.cursos.kstream.namesplitter.model.mapper.PersonAvroMapperImpl;
 import com.gumi.cursos.kstream.namesplitter.topology.common.BaseTopologyTest;
 import com.gumi.cursos.kstream.namesplitter.topology.login.LoginTopologyDefinition;
+import com.gumi.cursos.kstream.namesplitter.transformer.PersonCountLoginsIncrementTransformer;
 import com.gumi.cursos.kstream.namesplitter.transformer.PersonLoggedCheckerTransformer;
 import com.gumi.cursos.kstream.namesplitter.transformer.PersonLoginSaveTransformer;
 import io.confluent.kafka.schemaregistry.testutil.MockSchemaRegistry;
@@ -25,7 +29,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = {
 		LoginTopologyDefinition.class,
 		PersonLoginSaveTransformer.class,
-		PersonLoggedCheckerTransformer.class })
+		PersonLoggedCheckerTransformer.class,
+		PersonAvroMapperImpl.class,
+		NameAvroMapperImpl.class,
+		DniAvroMapperImpl.class,
+		PersonCountLoginsIncrementTransformer.class})
 public class LoginBaseTest extends BaseTopologyTest {
 
 	protected TestInputTopic<String, PersonDTO> personLoginTopic;

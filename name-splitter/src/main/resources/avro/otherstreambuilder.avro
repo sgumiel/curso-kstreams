@@ -1,0 +1,11 @@
+{
+  "name": "OtherStreamBuilderDTO",
+  "type": "record",
+  "namespace": "com.gumi.cursos.kstream.infrastructure.kafka.avro",
+  "fields": [
+    {
+      "name": "value",
+      "type": "string"
+    }
+  ]
+}

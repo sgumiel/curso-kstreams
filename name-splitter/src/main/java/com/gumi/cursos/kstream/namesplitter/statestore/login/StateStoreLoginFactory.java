@@ -1,6 +1,5 @@
 package com.gumi.cursos.kstream.namesplitter.statestore.login;
 
-import static com.gumi.cursos.kstream.namesplitter.topology.login.constant.LoginTopologyConstant.PERSON_LOGIN_STORE;
 import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
 
 import java.util.HashMap;
@@ -14,9 +13,10 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
 
-public abstract class StateStoreFactory {
+public abstract class StateStoreLoginFactory {
 
-	public static StoreBuilder<KeyValueStore<String, PersonDTO>> createStateStoreLogin(final ApplicationProperties applicationProperties) {
+	public static final String PERSON_LOGIN_STORE = "person-login-store";
+	public static StoreBuilder<KeyValueStore<String, PersonDTO>> createPersonLoginStore(final ApplicationProperties applicationProperties) {
 		final var avroSerde = new SpecificAvroSerde<PersonDTO>();
 		Map<String, String> config = new HashMap<>();
 		config.put(SCHEMA_REGISTRY_URL_CONFIG, applicationProperties.getSchemaRegistryUrl());

@@ -1,8 +1,9 @@
 package com.gumi.cursos.kstream.namesplitter.transformer;
 
-import static com.gumi.cursos.kstream.namesplitter.topology.login.constant.LoginTopologyConstant.PERSON_LOGIN_STORE;
+import static com.gumi.cursos.kstream.namesplitter.statestore.login.StateStoreLoginFactory.PERSON_LOGIN_STORE;
 
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
+import com.gumi.cursos.kstream.namesplitter.model.domain.Person;
 import com.gumi.cursos.kstream.namesplitter.model.domain.PersonLoggedCheckerResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KeyValue;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PersonLoggedCheckerTransformer implements Transformer<String, PersonDTO, KeyValue<String, PersonLoggedCheckerResult>> {
+public class PersonLoggedCheckerTransformer implements Transformer<String, Person, KeyValue<String, PersonLoggedCheckerResult>> {
 
 	private ProcessorContext context;
 	private KeyValueStore<String, PersonDTO> store;
@@ -26,7 +27,7 @@ public class PersonLoggedCheckerTransformer implements Transformer<String, Perso
 	}
 
 	@Override
-	public KeyValue<String, PersonLoggedCheckerResult> transform(String s, PersonDTO person) {
+	public KeyValue<String, PersonLoggedCheckerResult> transform(String s, Person person) {
 
 		final var personFromStore = this.store.get(s);
 		return KeyValue.pair(s, PersonLoggedCheckerResult.of(person, personFromStore != null));

@@ -1,6 +1,6 @@
 package com.gumi.cursos.kstream.namesplitter.topology.login;
 
-import static com.gumi.cursos.kstream.namesplitter.topology.login.constant.LoginTopologyConstant.PERSON_LOGIN_STORE;
+import static com.gumi.cursos.kstream.namesplitter.statestore.login.StateStoreLoginFactory.PERSON_LOGIN_STORE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
@@ -26,8 +26,5 @@ public class LoginTopologyITest extends LoginBaseTest {
         KeyValueStore<String, PersonDTO> personLoginStore = testDriver.getKeyValueStore(PERSON_LOGIN_STORE);
         final var personFromStore = personLoginStore.get(key);
         assertThat(personFromStore).isEqualTo(personDTO);
-
-
-
     }
 }
