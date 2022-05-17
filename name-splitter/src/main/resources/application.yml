@@ -14,7 +14,7 @@ topics:
   name-simple: name-simple-topic
   login: login-topic
   person-some-checks-after-login: person-some-checks-after-login
-  other-stream-builder: other-stream-builder
+  other-stream-builder: other-stream-builder1
 
 logging:
   level:

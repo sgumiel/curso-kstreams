@@ -3,6 +3,7 @@ package com.gumi.cursos.kstream.randomdata.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.gumi.cursos.kstream.infrastructure.kafka.avro.OtherStreamBuilderDTO;
 import com.gumi.cursos.kstream.infrastructure.kafka.avro.PersonDTO;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -41,6 +42,13 @@ public class KafkaProducerConfig {
 
     @Bean
     public KafkaTemplate<String, PersonDTO> kafkaTemplatePersonDTO(ProducerFactory<String, String> kafkaProducerFactory) {
+        final var kafkaTemplate = new KafkaTemplate(kafkaProducerFactory);
+        kafkaProducerFactory.createProducer();
+        return kafkaTemplate;
+    }
+
+    @Bean
+    public KafkaTemplate<String, OtherStreamBuilderDTO> kafkaTemplateOtherStreamBuilderDTO(ProducerFactory<String, String> kafkaProducerFactory) {
         final var kafkaTemplate = new KafkaTemplate(kafkaProducerFactory);
         kafkaProducerFactory.createProducer();
         return kafkaTemplate;

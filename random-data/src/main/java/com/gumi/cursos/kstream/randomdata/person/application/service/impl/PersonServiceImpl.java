@@ -20,7 +20,6 @@ public class PersonServiceImpl implements PersonService {
     private final PersonFactory personFactory;
     private final PersonProducer personProducer;
     private final PersonRepository personRepository;
-    private final RandomNumberService randomNumberService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)

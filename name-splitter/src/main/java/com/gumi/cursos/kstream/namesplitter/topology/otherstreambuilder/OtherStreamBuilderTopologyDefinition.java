@@ -18,11 +18,10 @@ import org.springframework.context.annotation.Configuration;
 public class OtherStreamBuilderTopologyDefinition {
 
 	@Bean
-	public Topology otherStreamBuilderTopology(
+	public Topology otherStreamBuilderTopology(final StreamsBuilder streamsBuilder,
 			final KafkaTopicProperties kafkaTopicProperties) {
 
 
-		final StreamsBuilder streamsBuilder = new StreamsBuilder();
 		final var otherStreamBuilder = streamsBuilder
 				.<String, OtherStreamBuilderDTO>stream(kafkaTopicProperties.getOtherStreamBuilder(), Consumed.as(CONSUMED_AS_OTHER_STREAM_BUILDER_CONSUMER));
 

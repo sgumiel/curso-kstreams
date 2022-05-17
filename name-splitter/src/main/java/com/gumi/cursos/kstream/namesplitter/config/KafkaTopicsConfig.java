@@ -39,6 +39,14 @@ public class KafkaTopicsConfig {
 	}
 
 	@Bean
+	public NewTopic otherStreamBuilderTopic(){
+		return TopicBuilder.name(this.kafkaTopicProperties.getOtherStreamBuilder())
+				.partitions(1)
+				.replicas(1)
+				.build();
+	}
+
+	@Bean
 	public NewTopic personTopic(){
 		return TopicBuilder.name(this.kafkaTopicProperties.getPerson())
 				.partitions(1)

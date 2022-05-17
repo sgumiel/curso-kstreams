@@ -30,6 +30,7 @@ schema:
 
 topics:
   person: person-topic
+  other-stream-builder: other-stream-builder1
 
 logging:
   level:
